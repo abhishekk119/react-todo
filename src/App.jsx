@@ -139,7 +139,9 @@ function App() {
   const [listCaptions, setListCaptions] = useState(() =>
     loadFromStorage("listCaptions", {})
   );
-  const [editedCaptions, setEditedCaptions] = useState({});
+  const [editedCaptions, setEditedCaptions] = useState(() =>
+    loadFromStorage("editedCaptions", {})
+  );
 
   // Save ALL data whenever ANY state changes
   useEffect(() => {
@@ -151,6 +153,7 @@ function App() {
     saveToStorage("expandedStates", expandedStates);
     saveToStorage("tasksExpandedStates", tasksExpandedStates);
     saveToStorage("listCaptions", listCaptions);
+    saveToStorage("editedCaptions", editedCaptions);
   }, [
     newTaskGroup,
     taskLists,
@@ -160,6 +163,7 @@ function App() {
     expandedStates,
     tasksExpandedStates,
     listCaptions,
+    editedCaptions,
   ]);
 
   // Calculate incomplete tasks whenever tasks change
