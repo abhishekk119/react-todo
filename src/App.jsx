@@ -139,6 +139,7 @@ function App() {
   const [listCaptions, setListCaptions] = useState(() =>
     loadFromStorage("listCaptions", {})
   );
+  const [editedCaptions, setEditedCaptions] = useState({});
 
   // Save ALL data whenever ANY state changes
   useEffect(() => {
@@ -506,6 +507,12 @@ function App() {
       ...prev,
       [listId]: newCaption,
     }));
+
+    // Mark this caption as edited
+    setEditedCaptions((prev) => ({
+      ...prev,
+      [listId]: true,
+    }));
   }
 
   // Toggle expand/collapse for all lists in a task group
@@ -747,7 +754,11 @@ function App() {
                               e.target.blur();
                             }
                           }}
-                          style={{ color: "rgb(112, 111, 111)" }}
+                          style={{
+                            color: editedCaptions[list.id]
+                              ? "green" // Color after editing
+                              : "rgb(112, 111, 111)", // Original color
+                          }}
                         >
                           {listCaptions[list.id] || "Add caption"}
                         </p>
