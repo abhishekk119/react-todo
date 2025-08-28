@@ -749,9 +749,26 @@ function App() {
                         <p
                           contentEditable
                           suppressContentEditableWarning
-                          onBlur={(e) =>
-                            updateListCaption(list.id, e.target.textContent)
-                          }
+                          onFocus={(e) => {
+                            if (e.target.textContent === "Add caption") {
+                              e.target.textContent = "";
+                            }
+                          }}
+                          onBlur={(e) => {
+                            const newCaption = e.target.textContent.trim();
+
+                            // Only update if the caption actually changed and is not empty
+                            if (newCaption && newCaption !== "Add caption") {
+                              updateListCaption(list.id, newCaption);
+                            } else {
+                              e.target.textContent = "Add caption";
+                              // Make sure to mark as not edited if empty
+                              setEditedCaptions((prev) => ({
+                                ...prev,
+                                [list.id]: false,
+                              }));
+                            }
+                          }}
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
                               e.preventDefault();
@@ -759,9 +776,12 @@ function App() {
                             }
                           }}
                           style={{
-                            color: editedCaptions[list.id]
-                              ? "skyblue" // Color after editing
-                              : "rgb(112, 111, 111)", // Original color
+                            color:
+                              editedCaptions[list.id] &&
+                              listCaptions[list.id] &&
+                              listCaptions[list.id] !== "Add caption"
+                                ? "skyblue"
+                                : "rgb(112, 111, 111)",
                           }}
                         >
                           {listCaptions[list.id] || "Add caption"}
