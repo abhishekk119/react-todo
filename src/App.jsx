@@ -756,7 +756,7 @@ function App() {
                           }}
                           style={{
                             color: editedCaptions[list.id]
-                              ? "green" // Color after editing
+                              ? "skyblue" // Color after editing
                               : "rgb(112, 111, 111)", // Original color
                           }}
                         >
