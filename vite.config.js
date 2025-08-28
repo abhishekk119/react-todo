@@ -19,7 +19,7 @@ export default defineConfig({
         theme_color: "#000000",
         icons: [
           {
-            src: "/clipboard.svg",
+            src: "clipboard.svg",
             sizes: "192x192",
             type: "image/png",
           },
