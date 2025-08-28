@@ -507,16 +507,31 @@ function App() {
   }
 
   function updateListCaption(listId, newCaption) {
-    setListCaptions((prev) => ({
-      ...prev,
-      [listId]: newCaption,
-    }));
+    // If caption is empty, remove it from storage and mark as not edited
+    if (!newCaption.trim()) {
+      setListCaptions((prev) => {
+        const updated = { ...prev };
+        delete updated[listId];
+        return updated;
+      });
 
-    // Mark this caption as edited
-    setEditedCaptions((prev) => ({
-      ...prev,
-      [listId]: true,
-    }));
+      setEditedCaptions((prev) => ({
+        ...prev,
+        [listId]: false,
+      }));
+    } else {
+      // Only update if we have a non-empty caption
+      setListCaptions((prev) => ({
+        ...prev,
+        [listId]: newCaption,
+      }));
+
+      // Mark this caption as edited
+      setEditedCaptions((prev) => ({
+        ...prev,
+        [listId]: true,
+      }));
+    }
   }
 
   // Toggle expand/collapse for all lists in a task group
@@ -757,16 +772,12 @@ function App() {
                           onBlur={(e) => {
                             const newCaption = e.target.textContent.trim();
 
-                            // Only update if the caption actually changed and is not empty
-                            if (newCaption && newCaption !== "Add caption") {
-                              updateListCaption(list.id, newCaption);
-                            } else {
+                            // Update the caption (this will handle empty strings properly)
+                            updateListCaption(list.id, newCaption);
+
+                            // If empty, reset to placeholder text
+                            if (!newCaption) {
                               e.target.textContent = "Add caption";
-                              // Make sure to mark as not edited if empty
-                              setEditedCaptions((prev) => ({
-                                ...prev,
-                                [list.id]: false,
-                              }));
                             }
                           }}
                           onKeyDown={(e) => {
